@@ -1,0 +1,55 @@
+{
+  "tarefas": [
+    {
+      "id_tarefa": 1,
+      "nome_tarefa": "nome da tarefa 1",
+      "data_inicial": "2022-06-20",
+      "data_limite": "2022-07-20",
+      "hora": "19:30",
+      "status": 22,
+      "descricao": "descrição da atividade",
+      "subtarefas": [
+        {
+          "id_subtarefa": 100,
+          "nome_subtarefa": "nome da subtarefa",
+          "anexo_subtarefa": null,
+          "status_subtarefa": "fazendo"
+        }
+      ]
+    },
+    {
+      "id_tarefa": 2,
+      "nome_tarefa": "nome da tarefa 2",
+      "data_inicial": "2022-06-20",
+      "data_limite": "2022-07-20",
+      "hora": "19:30",
+      "status": 50,
+      "descricao": "descrição da atividade",
+      "subtarefas": [
+        {
+          "id_subtarefa": 100,
+          "nome_subtarefa": "nome da subtarefa",
+          "anexo_subtarefa": null,
+          "status_subtarefa": "a fazer"
+        }
+      ]
+    },
+    {
+      "id_tarefa": 3,
+      "nome_tarefa": "nome da tarefa 3",
+      "data_inicial": "2022-06-20",
+      "data_limite": "2022-07-20",
+      "hora": "19:30",
+      "status": 98,
+      "descricao": "descrição da atividade",
+      "subtarefas": [
+        {
+          "id_subtarefa": 100,
+          "nome_subtarefa": "nome da subtarefa",
+          "anexo_subtarefa": null,
+          "status_subtarefa": "fazendo"
+        }
+      ]
+    }
+  ]
+}

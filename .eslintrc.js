@@ -14,24 +14,32 @@ module.exports = {
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: './tsconfig.json',
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: ['./tsconfig.json']
   },
   plugins: ['react', 'react-hooks', '@typescript-eslint', 'prettier'],
   rules: {
     '@typescript-eslint/no-empty-function': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-floating-promises': 'off',
+    '@typescript-eslint/no-misused-promises': 'off',
     '@typescript-eslint/no-unsafe-assignment': 'off',
-    indent: ['error', 2, { SwitchCase: 1 }],
-    'linebreak-style': ['error', 'unix'],
+    '@typescript-eslint/unbound-method': 'off',
     'no-empty-function': 'off',
-    quotes: ['error', 'single', { avoidEscape: true }],
     'react/display-name': 'off',
     'react/prop-types': 'off',
-    semi: ['error', 'never'],
+    'react-hooks/rules-of-hooks': 'off',
   },
   settings: {
     react: {
       version: 'detect',
+    },
+    'import/resolver': {
+      typescript: {},
     },
   },
 }
