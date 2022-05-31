@@ -1,4 +1,6 @@
-import React, { FormEvent } from 'react'
+import React, { ChangeEvent, FormEvent, useState } from 'react'
+import { BsPlusCircleFill } from 'react-icons/bs'
+import { v4 as uuid } from 'uuid'
 import {
   Button,
   Modal,
@@ -13,8 +15,13 @@ import {
   Input,
   VStack,
   Textarea,
+  Stack,
+  InputRightElement,
+  InputGroup,
+  IconButton,
 } from '@chakra-ui/react'
 import { useFormState } from '@/hooks/useFormState'
+import Subtask, { SubtaskData, SubtaskProps } from './Subtask'
 
 type KanbanModalProps = {
   addTask: (newTask: any) => void
@@ -27,6 +34,7 @@ type TaskData = {
   descricao: string
   dt_inicio: Date
   dt_final: Date
+  subtarefas: SubtaskData[]
 }
 
 const KanbanModal = ({ addTask, onClose, isOpen }: KanbanModalProps) => {
@@ -35,13 +43,54 @@ const KanbanModal = ({ addTask, onClose, isOpen }: KanbanModalProps) => {
     descricao: '',
     dt_inicio: new Date(),
     dt_final: new Date(),
+    subtarefas: [],
   })
+
+  const [subtaskValue, setSubtaskValue] = useState('')
+  const [subtasks, setSubtasks] = useState<SubtaskProps[]>([])
 
   const handleAddTask = (event: FormEvent<HTMLButtonElement>) => {
     event.preventDefault()
     console.log(data)
     addTask(data)
     onClose()
+  }
+
+  const handleAddSubtask = () => {
+    if (subtaskValue.length) {
+      const newSubtask = {
+        data: {
+          id: uuid(),
+          nome_subtarefa: subtaskValue,
+          anexo_subtarefa: 'https://via.placeholder.com/150',
+          status_subtarefa: false,
+        },
+        handleDelete: handleDeleteSubtask,
+        toggleCheck,
+      }
+
+      setSubtasks([...subtasks, newSubtask])
+      setSubtaskValue('')
+    }
+  }
+
+  const handleDeleteSubtask = (id: string) => {
+    setSubtasks(subtasks.filter(subtask => subtask.data.id !== id))
+  }
+
+  const toggleCheck = (id: string) => {
+    const subtaskToUpdateIndex = subtasks.findIndex(subtask => subtask.data.id === id)
+
+    if (subtaskToUpdateIndex === -1) return
+
+    const updatedTask = subtasks[subtaskToUpdateIndex]
+    updatedTask.data.status_subtarefa = !updatedTask.data.status_subtarefa
+
+    setSubtasks(
+      subtasks.map(task => {
+        return task.data.id === id ? updatedTask : task
+      }),
+    )
   }
 
   return (
@@ -63,6 +112,46 @@ const KanbanModal = ({ addTask, onClose, isOpen }: KanbanModalProps) => {
                 onChange={handleChange}
               />
             </FormControl>
+
+            <FormControl>
+              <FormLabel fontWeight="bold" fontSize="14px">
+                Subtarefas
+              </FormLabel>
+              <Stack spacing={5}>
+                <InputGroup size="md">
+                  <Input
+                    value={subtaskValue}
+                    variant="outline"
+                    type="text"
+                    placeholder="Adicione subtarefas..."
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setSubtaskValue(e.target.value)}
+                  />
+                  <InputRightElement width="3rem">
+                    <IconButton
+                      margin={2}
+                      aria-label="adicionar"
+                      colorScheme="cyan"
+                      variant="link"
+                      onClick={handleAddSubtask}
+                      icon={<BsPlusCircleFill />}
+                    />
+                  </InputRightElement>
+                </InputGroup>
+
+                {subtasks &&
+                  subtasks.map(task => (
+                    <Stack w="100%" align="center" key={task.data.id}>
+                      <Subtask
+                        key={task.data.id}
+                        data={task.data}
+                        toggleCheck={toggleCheck}
+                        handleDelete={handleDeleteSubtask}
+                      />
+                    </Stack>
+                  ))}
+              </Stack>
+            </FormControl>
+
             <FormControl mt={6}>
               <FormLabel fontWeight="bold" fontSize="14px">
                 Descrição
