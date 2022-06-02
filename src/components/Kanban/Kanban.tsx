@@ -26,7 +26,7 @@ const Kanban = () => {
       )}
       <DragDropContext onDragEnd={e => console.log(e)}>
         <Center>
-          <HStack>
+          <HStack mt="80px">
             {columns.map(({ id, name, tasks }) => (
               <KanbanColumn
                 id={id}
@@ -50,7 +50,7 @@ const Kanban = () => {
             position="fixed"
             right="50px"
             bottom="50px"
-            bg="brand.blue"
+            bg="#F78EA7"
             color="white"
             borderRadius="50%"
           />
@@ -66,7 +66,7 @@ const Kanban = () => {
             position="fixed"
             right="50px"
             bottom="calc(100vh / 2)"
-            bg="brand.blue"
+            bg="#F78EA7"
             color="white"
             borderRadius="50%"
           />
@@ -82,7 +82,7 @@ const Kanban = () => {
             position="fixed"
             left="50px"
             bottom="calc(100vh / 2)"
-            bg="brand.blue"
+            bg="#F78EA7"
             color="white"
             borderRadius="50%"
           />

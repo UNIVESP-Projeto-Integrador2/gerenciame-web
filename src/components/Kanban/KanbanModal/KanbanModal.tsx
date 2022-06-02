@@ -94,7 +94,7 @@ const KanbanModal = ({ addTask, onClose, isOpen }: KanbanModalProps) => {
   }
 
   return (
-    <Modal onClose={onClose} isOpen={isOpen}>
+    <Modal onClose={onClose} isOpen={isOpen} blockScrollOnMount={false}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Adicionar tarefa</ModalHeader>

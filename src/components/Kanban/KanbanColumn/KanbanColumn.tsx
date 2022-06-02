@@ -14,12 +14,12 @@ const KanbanColumn = ({ name, tasks, removeTask, editTask }: KanbanColumnProps) 
     <VStack
       minH="700px"
       align="stretch"
-      backgroundColor="brand.yellow"
+      backgroundColor="gray.100"
       minW="120px"
       borderRadius={4}
       textAlign="center"
       justifyContent="space-between"
-      w="150px"
+      w="170px"
       p={4}
     >
       <Heading size="md">{name}</Heading>
