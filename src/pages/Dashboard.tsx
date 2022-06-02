@@ -1,6 +1,7 @@
 import React from 'react'
-import { Center, Heading, Spinner, useToast } from '@chakra-ui/react'
+import { Center, Spinner, useToast } from '@chakra-ui/react'
 import Kanban from '../components/Kanban/Kanban'
+import { Header } from '@/components/Header'
 import { useGetTasksQuery } from '../services/api'
 
 export function DashboardPage() {
@@ -27,7 +28,7 @@ export function DashboardPage() {
 
   return (
     <>
-      <Heading>Dashboard</Heading>
+      <Header />
       <Kanban />
     </>
   )
