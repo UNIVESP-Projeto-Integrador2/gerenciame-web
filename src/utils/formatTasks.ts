@@ -56,7 +56,8 @@ export const formatWeekTasks = (currentWeek: number, allTasks: Task[]) => {
     getGroupedTasksByWeekOfTheYear(allTasks)
 
   const groupedTasksByDayOfTheWeek: Record<string, Task[]> = getGroupedTasksByDayOfTheWeek(
-    groupedTasksByWeekOfTheYear[String(currentWeek)],
+    groupedTasksByWeekOfTheYear[String(currentWeek - 1)],
+    // TODO: ajustar
   )
 
   return format(groupedTasksByDayOfTheWeek)

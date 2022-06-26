@@ -1,3 +1,4 @@
+import { TaskData } from '@/components/Kanban/KanbanModal/KanbanModal'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Tarefa } from '../types/tarefa'
 
@@ -61,6 +62,13 @@ export const api = createApi({
     getTaskById: builder.query<Tarefa, number>({
       query: tarefa_id => `${TASKS_PATH}/${tarefa_id}`,
     }),
+    createTask: builder.mutation<TaskData, {data: TaskData}>({
+      query: ({ data }) => ({
+        url: TASKS_PATH,
+        method: 'POST',
+        body: data,
+      }),
+    }),
     updateTask: builder.mutation<Tarefa, { tarefa_id: number; data: Partial<Tarefa> }>({
       query: ({ tarefa_id, data }) => ({
         url: `${TASKS_PATH}/${tarefa_id}`,
@@ -68,7 +76,7 @@ export const api = createApi({
         body: data,
       }),
     }),
-    removeTask: builder.mutation<void, { tarefa_id: number }>({
+    deleteTask: builder.mutation<void, { tarefa_id: number }>({
       query: ({ tarefa_id }) => ({
         url: `${TASKS_PATH}/${tarefa_id}`,
         method: 'DELETE',
@@ -83,5 +91,6 @@ export const {
   useGetTasksQuery,
   useGetTaskByIdQuery,
   useUpdateTaskMutation,
-  useRemoveTaskMutation,
+  useCreateTaskMutation,
+  useDeleteTaskMutation
 } = api

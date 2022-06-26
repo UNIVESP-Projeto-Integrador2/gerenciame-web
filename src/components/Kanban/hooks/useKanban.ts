@@ -1,4 +1,4 @@
-import { useGetTasksQuery } from '@/services/api'
+import { useCreateTaskMutation, useGetTasksQuery, useDeleteTaskMutation } from '@/services/api'
 import { Tarefa } from '@/types/tarefa'
 import { useDisclosure } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
@@ -11,6 +11,7 @@ import {
   parseDbTaskToTask,
   Task,
 } from '@/utils/formatTasks'
+import { TaskData } from '../KanbanModal/KanbanModal'
 
 export const useKanban = () => {
   const [columns, setColumns] = useState<ColumnProps[]>([])
@@ -18,6 +19,9 @@ export const useKanban = () => {
   const { data, isLoading, error } = useGetTasksQuery()
   const [currentWeek, setCurrentWeek] = useState(getWeek(new Date()))
   const [allTasks, setAllTasks] = useState<Task[]>([])
+
+  const [ createTask ] = useCreateTaskMutation()
+  const [ deleteTask ] = useDeleteTaskMutation()
 
   useEffect(() => {
     if (data) {
@@ -77,7 +81,7 @@ export const useKanban = () => {
     setColumns([...newColumnsState])
   }
 
-  const addTask = (task: Tarefa) => {
+  const addTask = (task: TaskData) => {
     addTaskOnClose()
 
     const newTask = parseDbTaskToTask(task)
@@ -86,6 +90,8 @@ export const useKanban = () => {
 
     const updatedColumns = formatWeekTasks(currentWeek, newTasks)
     setColumns(updatedColumns)
+ 
+    createTask({data: task})
   }
 
   const removeTask = (taskId: number) => {
@@ -94,6 +100,7 @@ export const useKanban = () => {
 
     const updatedColumns = formatWeekTasks(currentWeek, newTasks)
     setColumns(updatedColumns)
+    deleteTask({ tarefa_id: taskId })
   }
 
   // TODO: editar

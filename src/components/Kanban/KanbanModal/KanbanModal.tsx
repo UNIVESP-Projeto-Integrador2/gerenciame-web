@@ -29,7 +29,7 @@ type KanbanModalProps = {
   onClose: () => void
 }
 
-type TaskData = {
+export type TaskData = {
   nome_tarefa: string
   descricao: string
   data_inicial: Date
@@ -46,7 +46,7 @@ const KanbanModal = ({ addTask, onClose, isOpen }: KanbanModalProps) => {
     data_inicial: new Date(),
     data_limite: new Date(),
     status: 'A fazer',
-    hora: ' ',
+    hora: '09:00:00',
   })
 
   const [subtaskValue, setSubtaskValue] = useState('')
@@ -166,7 +166,7 @@ const KanbanModal = ({ addTask, onClose, isOpen }: KanbanModalProps) => {
                 Data de início
               </FormLabel>
               <Input
-                name="dt_inicial"
+                name="data_inicial"
                 type="datetime-local"
                 placeholder="Início"
                 onChange={handleChange}
@@ -177,7 +177,7 @@ const KanbanModal = ({ addTask, onClose, isOpen }: KanbanModalProps) => {
                 Data final
               </FormLabel>
               <Input
-                name="dt_final"
+                name="data_limite"
                 type="datetime-local"
                 placeholder="Fim"
                 onChange={handleChange}

@@ -18,6 +18,7 @@ export function Header(props: { userEmail: string }) {
       paddingX={6}
       position="fixed"
       h="60px"
+      zIndex={2}
     >
       <Box w="90%">
         <Flex direction="row" alignContent="center">
