@@ -1,10 +1,11 @@
 import React from 'react'
-import { Box, Button, ButtonGroup, Flex, Heading, IconButton, Spacer } from '@chakra-ui/react'
-import { FiLogOut } from 'react-icons/fi'
+import { Box, Flex, Heading, IconButton, Spacer, Text } from '@chakra-ui/react'
+import { FiLogOut, FiCalendar, FiChevronsLeft, FiChevronsRight } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 
-export function Header() {
+export function Header(props: { userEmail: string }) {
+  const { userEmail } = props
   const { user } = useAuth()
   const navigate = useNavigate()
 
@@ -19,9 +20,16 @@ export function Header() {
       h="60px"
     >
       <Box w="90%">
-        <Heading size="lg" color="whiteAlpha.900">
-          gerencia.me
-        </Heading>
+        <Flex direction="row" alignContent="center">
+          <Flex>
+            <FiChevronsLeft color="white" size={20} />
+            <FiCalendar color="white" size={20} />
+            <FiChevronsRight color="white" size={20} />
+          </Flex>
+          <Heading size="sm" color="whiteAlpha.900">
+            gerencia.me
+          </Heading>
+        </Flex>
       </Box>
       <Spacer />
       {user ? (
@@ -29,14 +37,26 @@ export function Header() {
           Sair
         </IconButton>
       ) : (
-        <ButtonGroup gap="2">
-          <Button colorScheme="brand.blue" onClick={() => navigate({ pathname: '/signup' })}>
-            Cadastro
-          </Button>
-          <Button colorScheme="brand.blue" onClick={() => navigate({ pathname: '/' })}>
-            Entrar
-          </Button>
-        </ButtonGroup>
+        // <ButtonGroup gap="2">
+        //   <Button colorScheme="brand.blue" onClick={() => navigate({ pathname: '/signup' })}>
+        //     Cadastro
+        //   </Button>
+        //   <Button colorScheme="brand.blue" onClick={() => navigate({ pathname: '/' })}>
+        //     Entrar
+        //   </Button>
+        // </ButtonGroup>
+        <>
+          <Text color="white" pr="10px" fontSize="sm">
+            {userEmail}
+          </Text>
+          <IconButton
+            aria-label="Sair"
+            icon={<FiLogOut />}
+            onClick={() => navigate({ pathname: '/' })}
+          >
+            Sair
+          </IconButton>
+        </>
       )}
     </Flex>
   )

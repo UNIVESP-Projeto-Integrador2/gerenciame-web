@@ -3,6 +3,7 @@ import { Center, Spinner, useToast } from '@chakra-ui/react'
 import Kanban from '../components/Kanban/Kanban'
 import { Header } from '@/components/Header'
 import { useGetTasksQuery } from '../services/api'
+import { UserContext } from '@/context/userContext'
 
 export function DashboardPage() {
   // const [attemptAccess, { data }] = useProtectedMutation()
@@ -28,8 +29,16 @@ export function DashboardPage() {
 
   return (
     <>
-      <Header />
-      <Kanban />
+      <UserContext.Consumer>
+        {({ user }) => {
+          return (
+            <>
+              <Header userEmail={user.email} />
+              <Kanban />
+            </>
+          )
+        }}
+      </UserContext.Consumer>
     </>
   )
 }
