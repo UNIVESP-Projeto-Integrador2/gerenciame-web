@@ -22,7 +22,7 @@ export const useKanban = () => {
   useEffect(() => {
     if (data) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      const parsedTasks = parseDbTasksToTasks((data as any).tarefas as Tarefa[])
+      const parsedTasks = parseDbTasksToTasks((data as any) as Tarefa[])
       setAllTasks(parsedTasks)
       const formattedColumns = formatWeekTasks(currentWeek, parsedTasks)
       setColumns(formattedColumns)

@@ -32,18 +32,21 @@ type KanbanModalProps = {
 type TaskData = {
   nome_tarefa: string
   descricao: string
-  dt_inicio: Date
-  dt_final: Date
-  subtarefas: SubtaskData[]
+  data_inicial: Date
+  data_limite: Date
+  status: string
+  hora?: string
+  // subtarefas: SubtaskData[]
 }
 
 const KanbanModal = ({ addTask, onClose, isOpen }: KanbanModalProps) => {
   const [data, handleChange] = useFormState<TaskData>({
     nome_tarefa: '',
     descricao: '',
-    dt_inicio: new Date(),
-    dt_final: new Date(),
-    subtarefas: [],
+    data_inicial: new Date(),
+    data_limite: new Date(),
+    status: 'A fazer',
+    hora: ' ',
   })
 
   const [subtaskValue, setSubtaskValue] = useState('')

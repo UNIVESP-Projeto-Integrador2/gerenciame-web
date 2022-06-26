@@ -25,8 +25,8 @@ export type LoginRequest = {
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: '/',
-    // baseUrl: 'http://localhost:3333/',
+    // baseUrl: '/',
+    baseUrl: 'http://localhost:8080/',
     // prepareHeaders: (headers, { getState }) => {
     //   const token = (getState() as RootState).auth.token
     //   if (token) {

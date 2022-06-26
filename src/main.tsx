@@ -13,18 +13,18 @@ import { worker } from './mocks/browser'
 //   makeServer()
 // }
 
-worker.start().then(() =>
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  createRoot(document.getElementById('root')!).render(
-    <React.StrictMode>
-      <Provider store={store}>
-        <ChakraProvider theme={theme}>
-          <CSSReset />
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </ChakraProvider>
-      </Provider>
-    </React.StrictMode>,
-  ),
+// worker.start().then(() =>
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <ChakraProvider theme={theme}>
+        <CSSReset />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ChakraProvider>
+    </Provider>
+  </React.StrictMode>,
+  // ),
 )

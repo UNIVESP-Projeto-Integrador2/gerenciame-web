@@ -1,10 +1,10 @@
 export interface Tarefa {
   id_tarefa: number
   nome_tarefa: string
-  dt_inicial: Date
-  dt_final: Date
+  data_inicial: Date
+  data_limite: Date
   hora: number
-  stts_tarefa: boolean
+  status: boolean
   descricao: string
-  id_usuario: number
+  subtarefas?: any[]
 }

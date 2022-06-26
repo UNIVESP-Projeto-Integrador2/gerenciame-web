@@ -18,8 +18,8 @@ export const parseDbTasksToTasks = (allTasks: Tarefa[]) => allTasks.map(parseDbT
 
 export const parseDbTaskToTask = (task: Tarefa) => ({
   ...task,
-  dayOfWeek: getDay(new Date(task.dt_final)),
-  weekOfYear: getWeek(new Date(task.dt_final)),
+  dayOfWeek: getDay(new Date(task.data_inicial)),
+  weekOfYear: getWeek(new Date(task.data_limite)),
 })
 
 export const getGroupedTasksByWeekOfTheYear = (tasks: Task[]) =>
