@@ -55,10 +55,14 @@ export const formatWeekTasks = (currentWeek: number, allTasks: Task[]) => {
   const groupedTasksByWeekOfTheYear: Record<string, Task[]> =
     getGroupedTasksByWeekOfTheYear(allTasks)
 
-  const groupedTasksByDayOfTheWeek: Record<string, Task[]> = getGroupedTasksByDayOfTheWeek(
-    groupedTasksByWeekOfTheYear[String(currentWeek - 1)],
-    // TODO: ajustar
-  )
+    let groupedTasksByDayOfTheWeek: Record<string, Task[]> = []
+
+    if(allTasks.length > 0 && groupedTasksByWeekOfTheYear[String(currentWeek)]) {
+      groupedTasksByDayOfTheWeek = getGroupedTasksByDayOfTheWeek(
+        groupedTasksByWeekOfTheYear[String(currentWeek)],
+      )
+
+    }
 
   return format(groupedTasksByDayOfTheWeek)
 }
