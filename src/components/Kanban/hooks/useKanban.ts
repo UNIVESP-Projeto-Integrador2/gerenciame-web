@@ -1,4 +1,4 @@
-import { useCreateTaskMutation, useGetTasksQuery, useDeleteTaskMutation } from '@/services/api'
+import { useCreateTaskMutation, useGetTasksQuery, useDeleteTaskMutation, useUpdateTaskMutation } from '@/services/api'
 import { Tarefa } from '@/types/tarefa'
 import { useDisclosure } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
@@ -22,6 +22,7 @@ export const useKanban = () => {
 
   const [ createTask ] = useCreateTaskMutation()
   const [ deleteTask ] = useDeleteTaskMutation()
+  const [ updateTask ] = useUpdateTaskMutation()
 
   useEffect(() => {
     if (data) {
@@ -84,7 +85,7 @@ export const useKanban = () => {
   const addTask = (task: TaskData) => {
     addTaskOnClose()
 
-    const newTask = parseDbTaskToTask(task)
+    const newTask = parseDbTaskToTask(task as Tarefa)
     const newTasks = [...allTasks, newTask]
     setAllTasks(newTasks)
 
@@ -104,18 +105,33 @@ export const useKanban = () => {
   }
 
   // TODO: editar
-  const editTask = (taskId: number, newTask) => {
+  const editTask = (taskId: number, updatedTask: Tarefa) => {
+    addTaskOnClose()
+    const parsedTask = parseDbTaskToTask(updatedTask)
+
     const updatedColumns = columns.map(column => {
       return Object.assign({}, column, {
         taskIds: column.tasks.map(task => {
           if (task.id_tarefa === taskId) {
-            task = newTask
+            task = parsedTask
+          }
+          return task
+        }),
+        tasks:  column.tasks.map(task => {
+          if (task.id_tarefa === taskId) {
+            task = parsedTask
           }
           return task
         }),
       })
     })
+
     setColumns(updatedColumns)
+
+    updateTask({
+      tarefa_id: taskId,
+      data: updatedTask
+    })
   }
 
   const handleChangeWeek = (action: 'prev' | 'next') => {

@@ -3,10 +3,11 @@ import { KanbanTask } from '../KanbanTask'
 import { Droppable } from 'react-beautiful-dnd'
 import { Box, Heading, Text, VStack } from '@chakra-ui/react'
 import { ColumnProps, Task } from '@/utils/formatTasks'
+import { Tarefa } from '@/types/tarefa'
 
 export type KanbanColumnProps = ColumnProps & {
   removeTask: (id: number) => void
-  editTask: (id: number, newTask: Task) => void
+  editTask: (id: number, newTask: Tarefa) => void
 }
 
 const KanbanColumn = ({ name, tasks, removeTask, editTask }: KanbanColumnProps) => {

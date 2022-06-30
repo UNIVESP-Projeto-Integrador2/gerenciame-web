@@ -72,7 +72,7 @@ export const api = createApi({
     updateTask: builder.mutation<Tarefa, { tarefa_id: number; data: Partial<Tarefa> }>({
       query: ({ tarefa_id, data }) => ({
         url: `${TASKS_PATH}/${tarefa_id}`,
-        method: 'PATCH',
+        method: 'PUT',
         body: data,
       }),
     }),

@@ -3,18 +3,25 @@ import { Draggable } from 'react-beautiful-dnd'
 import { useToggle } from '@/hooks/useToggle'
 import { KanbanEditForm } from '../KanbanEditForm'
 import { FiEdit, FiTrash } from 'react-icons/fi'
-import { Box, HStack, IconButton, Text, VStack } from '@chakra-ui/react'
+import { Box, HStack, IconButton, Text, useDisclosure, VStack } from '@chakra-ui/react'
 import { Task } from '@/utils/formatTasks'
 import { format } from 'date-fns'
+import { KanbanModal } from '../KanbanModal'
+import { useKanban } from '../hooks/useKanban'
+import KanbanEditModal from '../KanbanEditModal/KanbanEditModal'
+import { TaskData } from '../KanbanModal/KanbanModal'
+import { Tarefa } from '@/types/tarefa'
 
 type KanbanTaskProps = {
   task: Task
-  editTask: (id: number, newTask: Task) => void
+  editTask: (id: number, newTask: Tarefa) => void
   removeTask: (id: number) => void
 }
 
 const KanbanTask = ({ task, editTask, removeTask }: KanbanTaskProps) => {
   const [isEditing, toggle] = useToggle(false)
+
+  const { addTaskOnClose } = useKanban()
 
   return (
     <Draggable draggableId={`task-${task.id_tarefa}`} index={task.id_tarefa}>
@@ -30,7 +37,16 @@ const KanbanTask = ({ task, editTask, removeTask }: KanbanTaskProps) => {
           borderRadius={4}
         >
           {isEditing ? (
-            <KanbanEditForm editTask={editTask} task={task} toggle={toggle} />
+            // <KanbanEditForm editTask={editTask} task={task} toggle={toggle} />
+            <KanbanEditModal
+              isOpen={isEditing}
+              updateTask={editTask}
+              task={task}
+              onClose={() => {
+                addTaskOnClose()
+                toggle()
+              }}
+            />
           ) : (
             <VStack>
               <Text fontSize="0.8rem">{task.nome_tarefa}</Text>

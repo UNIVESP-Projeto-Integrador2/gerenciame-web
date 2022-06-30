@@ -21,15 +21,17 @@ import {
   IconButton,
 } from '@chakra-ui/react'
 import { useFormState } from '@/hooks/useFormState'
-import Subtask, { SubtaskData, SubtaskProps } from './Subtask'
+import Subtask, { SubtaskData, SubtaskProps } from '../KanbanModal/Subtask'
+import { Task } from '@/utils/formatTasks'
+import { Tarefa } from '@/types/tarefa'
 
 type KanbanModalProps = {
-  addTask: (newTask: any) => void
+  updateTask: (id: number, newTask: Tarefa) => void
   isOpen: boolean
   onClose: () => void
+  task: Task
 }
 
-// igual tarefa, mas sem o id
 export type TaskData = {
   nome_tarefa: string
   descricao: string
@@ -40,68 +42,70 @@ export type TaskData = {
   subtarefas?: SubtaskData[]
 }
 
-const KanbanModal = ({ addTask, onClose, isOpen }: KanbanModalProps) => {
+const KanbanEditModal = ({ updateTask, onClose, isOpen, task }: KanbanModalProps) => {
   const [data, handleChange] = useFormState<TaskData>({
-    nome_tarefa: '',
-    descricao: '',
-    data_inicial: new Date(),
-    data_limite: new Date(),
-    status: 'A fazer',
-    hora: '09:00:00',
+    nome_tarefa: task.nome_tarefa,
+    descricao: task.descricao,
+    data_inicial: task.data_inicial,
+    data_limite: task.data_limite,
+    status: task.status,
+    hora: task.hora,
+    subtarefas: task.subtarefas,
   })
 
-  const [subtaskValue, setSubtaskValue] = useState('')
-  const [subtasks, setSubtasks] = useState<SubtaskProps[]>([])
+  //   const [subtaskValue, setSubtaskValue] = useState('')
+  //   const [subtasks, setSubtasks] = useState<SubtaskProps[]>([])
 
-  const handleAddTask = (event: FormEvent<HTMLButtonElement>) => {
+  const handleUpdateTask = (event: FormEvent<HTMLButtonElement>) => {
     event.preventDefault()
     console.log(data)
-    addTask(data)
+    updateTask(task.id_tarefa, { ...data, id_tarefa: task.id_tarefa })
     onClose()
   }
+  console.log(task.data_inicial)
 
-  const handleAddSubtask = () => {
-    if (subtaskValue.length) {
-      const newSubtask = {
-        data: {
-          id: uuid(),
-          nome_subtarefa: subtaskValue,
-          anexo_subtarefa: 'https://via.placeholder.com/150',
-          status_subtarefa: false,
-        },
-        handleDelete: handleDeleteSubtask,
-        toggleCheck,
-      }
+  //   const handleAddSubtask = () => {
+  //     if (subtaskValue.length) {
+  //       const newSubtask = {
+  //         data: {
+  //           id: uuid(),
+  //           nome_subtarefa: subtaskValue,
+  //           anexo_subtarefa: 'https://via.placeholder.com/150',
+  //           status_subtarefa: false,
+  //         },
+  //         handleDelete: handleDeleteSubtask,
+  //         toggleCheck,
+  //       }
 
-      setSubtasks([...subtasks, newSubtask])
-      setSubtaskValue('')
-    }
-  }
+  //       setSubtasks([...subtasks, newSubtask])
+  //       setSubtaskValue('')
+  //     }
+  //   }
 
-  const handleDeleteSubtask = (id: string) => {
-    setSubtasks(subtasks.filter(subtask => subtask.data.id !== id))
-  }
+  //   const handleDeleteSubtask = (id: string) => {
+  //     setSubtasks(subtasks.filter(subtask => subtask.data.id !== id))
+  //   }
 
-  const toggleCheck = (id: string) => {
-    const subtaskToUpdateIndex = subtasks.findIndex(subtask => subtask.data.id === id)
+  //   const toggleCheck = (id: string) => {
+  //     const subtaskToUpdateIndex = subtasks.findIndex(subtask => subtask.data.id === id)
 
-    if (subtaskToUpdateIndex === -1) return
+  //     if (subtaskToUpdateIndex === -1) return
 
-    const updatedTask = subtasks[subtaskToUpdateIndex]
-    updatedTask.data.status_subtarefa = !updatedTask.data.status_subtarefa
+  //     const updatedTask = subtasks[subtaskToUpdateIndex]
+  //     updatedTask.data.status_subtarefa = !updatedTask.data.status_subtarefa
 
-    setSubtasks(
-      subtasks.map(task => {
-        return task.data.id === id ? updatedTask : task
-      }),
-    )
-  }
+  //     setSubtasks(
+  //       subtasks.map(task => {
+  //         return task.data.id === id ? updatedTask : task
+  //       }),
+  //     )
+  //   }
 
   return (
-    <Modal onClose={onClose} isOpen={isOpen} blockScrollOnMount={false}>
+    <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Adicionar tarefa</ModalHeader>
+        <ModalHeader>Editar tarefa</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <VStack width="full" align="center" justifyContent="center">
@@ -113,10 +117,11 @@ const KanbanModal = ({ addTask, onClose, isOpen }: KanbanModalProps) => {
                 type="text"
                 name="nome_tarefa"
                 placeholder="Digite o nome da tarefa"
+                value={data.nome_tarefa}
                 onChange={handleChange}
               />
             </FormControl>
-
+            {/* 
             <FormControl>
               <FormLabel fontWeight="bold" fontSize="14px">
                 Subtarefas
@@ -154,13 +159,18 @@ const KanbanModal = ({ addTask, onClose, isOpen }: KanbanModalProps) => {
                     </Stack>
                   ))}
               </Stack>
-            </FormControl>
+            </FormControl> */}
 
             <FormControl mt={6}>
               <FormLabel fontWeight="bold" fontSize="14px">
                 Descrição
               </FormLabel>
-              <Textarea name="descricao" placeholder="Descrição" onChange={handleChange} />
+              <Textarea
+                name="descricao"
+                placeholder="Descrição"
+                onChange={handleChange}
+                value={data.descricao}
+              />
             </FormControl>
             <FormControl mt={6}>
               <FormLabel fontWeight="bold" fontSize="14px">
@@ -171,6 +181,8 @@ const KanbanModal = ({ addTask, onClose, isOpen }: KanbanModalProps) => {
                 type="datetime-local"
                 placeholder="Início"
                 onChange={handleChange}
+                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                value={`${data.data_inicial.toString()} ${data.hora}`}
               />
             </FormControl>
             <FormControl mt={6}>
@@ -182,6 +194,8 @@ const KanbanModal = ({ addTask, onClose, isOpen }: KanbanModalProps) => {
                 type="datetime-local"
                 placeholder="Fim"
                 onChange={handleChange}
+                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                value={`${data.data_limite.toString()} ${data.hora}`}
               />
             </FormControl>
           </VStack>
@@ -190,7 +204,7 @@ const KanbanModal = ({ addTask, onClose, isOpen }: KanbanModalProps) => {
           <Button colorScheme="blackAlpha" mr={3} onClick={onClose}>
             Cancelar
           </Button>
-          <Button type="submit" colorScheme="yellow" onClick={handleAddTask}>
+          <Button type="submit" colorScheme="yellow" onClick={handleUpdateTask}>
             Salvar
           </Button>
         </ModalFooter>
@@ -199,4 +213,4 @@ const KanbanModal = ({ addTask, onClose, isOpen }: KanbanModalProps) => {
   )
 }
 
-export default KanbanModal
+export default KanbanEditModal
