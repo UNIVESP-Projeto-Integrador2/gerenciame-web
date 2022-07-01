@@ -53,9 +53,9 @@ const KanbanTask = ({ task, editTask, removeTask }: KanbanTaskProps) => {
           ) : (
             <VStack>
               <Text fontSize="0.8rem">{task.nome_tarefa}</Text>
-              <Text fontSize="0.8rem">{task.descricao}</Text>
+              {/* <Text fontSize="0.8rem">{task.descricao}</Text> */}
               <Text fontSize="0.8rem">{format(new Date(dataInicial), 'dd/MM/yyyy')}</Text>
-              <Text fontSize="0.8rem">{format(new Date(dataFinal), 'dd/MM/yyyy')}</Text>
+              {/* <Text fontSize="0.8rem">{format(new Date(dataFinal), 'dd/MM/yyyy')}</Text> */}
               {String(task.status)}
               <HStack>
                 <IconButton

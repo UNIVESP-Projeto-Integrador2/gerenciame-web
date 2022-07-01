@@ -1,5 +1,11 @@
+/* eslint-disable @typescript-eslint/await-thenable */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React, { ChangeEvent, FormEvent, useState } from 'react'
 import { BsPlusCircleFill } from 'react-icons/bs'
+import { format } from 'date-fns'
+
 import { v4 as uuid } from 'uuid'
 import {
   Button,
@@ -21,12 +27,16 @@ import {
   IconButton,
 } from '@chakra-ui/react'
 import { useFormState } from '@/hooks/useFormState'
-import Subtask, { SubtaskData, SubtaskProps } from './Subtask'
+import Subtask from './Subtask'
+import { Tarefa } from '@/types/tarefa'
 
 type KanbanModalProps = {
-  addTask: (newTask: any) => void
+  addTask: (newTask: any) => Promise<{
+    data: Tarefa
+  }>
   isOpen: boolean
   onClose: () => void
+  addSubtask: (subtask: any) => void
 }
 
 // igual tarefa, mas sem o id
@@ -37,26 +47,52 @@ export type TaskData = {
   data_limite: Date
   status: string
   hora?: string
-  subtarefas?: SubtaskData[]
+  subtarefas?: { data: SubtaskData }[]
 }
 
-const KanbanModal = ({ addTask, onClose, isOpen }: KanbanModalProps) => {
+export type SubtaskData = {
+  id_subtarefa: string
+  id_tarefa: number
+  nome_subtarefa: string
+  anexo_subtarefa?: string
+  status_subtarefa?: string
+}
+
+const KanbanModal = ({ addTask, onClose, isOpen, addSubtask }: KanbanModalProps) => {
+  const [subtaskValue, setSubtaskValue] = useState('')
+  const [subtasks, setSubtasks] = useState<{ data: SubtaskData }[]>([])
+  const [taskId, setTaskId] = useState<number>()
+
   const [data, handleChange] = useFormState<TaskData>({
     nome_tarefa: '',
     descricao: '',
     data_inicial: new Date(),
     data_limite: new Date(),
     status: 'A fazer',
-    hora: '09:00:00',
+    hora: '00:00:00',
+    subtarefas: subtasks,
   })
 
-  const [subtaskValue, setSubtaskValue] = useState('')
-  const [subtasks, setSubtasks] = useState<SubtaskProps[]>([])
-
-  const handleAddTask = (event: FormEvent<HTMLButtonElement>) => {
+  const handleAddTask = async (event: FormEvent<HTMLButtonElement>) => {
     event.preventDefault()
-    console.log(data)
-    addTask(data)
+
+    const dataInicial = data.data_inicial.replace(/-/g, '/').split('T')[0]
+    const dataFinal = data.data_limite.replace(/-/g, '/').split('T')[0]
+
+    const dataInicialF = new Date(dataInicial).toISOString().split('T')[0]
+    const dataFinalF = new Date(dataFinal).toISOString().split('T')[0]
+
+    const formattedData = { ...data, data_inicial: dataInicialF, data_limite: dataFinalF }
+
+    addTask(formattedData).then(res => {
+      setTaskId(res.data.id_tarefa)
+
+      subtasks.forEach(sub => {
+        const formattedSubtask = { ...sub.data, id_tarefa: res.data.id_tarefa }
+        addSubtask(formattedSubtask)
+      })
+    })
+
     onClose()
   }
 
@@ -66,8 +102,7 @@ const KanbanModal = ({ addTask, onClose, isOpen }: KanbanModalProps) => {
         data: {
           id: uuid(),
           nome_subtarefa: subtaskValue,
-          anexo_subtarefa: 'https://via.placeholder.com/150',
-          status_subtarefa: false,
+          status_subtarefa: 'A_FAZER',
         },
         handleDelete: handleDeleteSubtask,
         toggleCheck,
@@ -87,8 +122,10 @@ const KanbanModal = ({ addTask, onClose, isOpen }: KanbanModalProps) => {
 
     if (subtaskToUpdateIndex === -1) return
 
-    const updatedTask = subtasks[subtaskToUpdateIndex]
-    updatedTask.data.status_subtarefa = !updatedTask.data.status_subtarefa
+    const updatedTask = { ...subtasks[subtaskToUpdateIndex] }
+
+    updatedTask.data.status_subtarefa =
+      updatedTask.data.status_subtarefa === 'A_FAZER' ? 'FEITO' : 'A_FAZER'
 
     setSubtasks(
       subtasks.map(task => {

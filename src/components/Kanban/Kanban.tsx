@@ -17,12 +17,18 @@ const Kanban = () => {
     addTaskOnClose,
     addTaskOnOpen,
     handleChangeWeek,
+    addSubTask,
   } = useKanban()
 
   return (
     <>
       {addTaskIsOpen && (
-        <KanbanModal onClose={addTaskOnClose} addTask={addTask} isOpen={addTaskIsOpen} />
+        <KanbanModal
+          onClose={addTaskOnClose}
+          addTask={addTask}
+          isOpen={addTaskIsOpen}
+          addSubtask={addSubTask}
+        />
       )}
       <DragDropContext onDragEnd={e => console.log(e)}>
         <Center>

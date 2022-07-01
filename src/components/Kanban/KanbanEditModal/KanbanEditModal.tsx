@@ -21,9 +21,11 @@ import {
   IconButton,
 } from '@chakra-ui/react'
 import { useFormState } from '@/hooks/useFormState'
-import Subtask, { SubtaskData, SubtaskProps } from '../KanbanModal/Subtask'
+import { SubtaskData, SubtaskProps } from '../KanbanModal/Subtask'
 import { Task } from '@/utils/formatTasks'
 import { Tarefa } from '@/types/tarefa'
+import { useKanban } from '../hooks/useKanban'
+import SubtaskEdit from './SubtaskEdit'
 
 type KanbanModalProps = {
   updateTask: (id: number, newTask: Tarefa) => void
@@ -53,53 +55,70 @@ const KanbanEditModal = ({ updateTask, onClose, isOpen, task }: KanbanModalProps
     subtarefas: task.subtarefas,
   })
 
-  //   const [subtaskValue, setSubtaskValue] = useState('')
-  //   const [subtasks, setSubtasks] = useState<SubtaskProps[]>([])
+  const { editSubTask, removeSubTask } = useKanban()
+
+  // const subtarefasComplete = task.subtarefas?.map(sub => ({
+  //   data: { ...sub },
+  //   handleDelete: handleDeleteSubtask,
+  //   toggleCheck,
+  // }))
+
+  const [subtaskValue, setSubtaskValue] = useState('')
+  const [subtasks, setSubtasks] = useState<SubtaskData[] | undefined>(task.subtarefas)
 
   const handleUpdateTask = (event: FormEvent<HTMLButtonElement>) => {
     event.preventDefault()
-    console.log(data)
     updateTask(task.id_tarefa, { ...data, id_tarefa: task.id_tarefa })
     onClose()
   }
-  console.log(task.data_inicial)
 
-  //   const handleAddSubtask = () => {
-  //     if (subtaskValue.length) {
-  //       const newSubtask = {
-  //         data: {
-  //           id: uuid(),
-  //           nome_subtarefa: subtaskValue,
-  //           anexo_subtarefa: 'https://via.placeholder.com/150',
-  //           status_subtarefa: false,
-  //         },
-  //         handleDelete: handleDeleteSubtask,
-  //         toggleCheck,
-  //       }
+  const handleDeleteSubtask = (id: string) => {
+    if (subtasks) {
+      setSubtasks(subtasks.filter(subtask => subtask.id_subtarefa !== parseInt(id)))
+      removeSubTask(parseInt(id))
+    }
+  }
 
-  //       setSubtasks([...subtasks, newSubtask])
-  //       setSubtaskValue('')
-  //     }
-  //   }
+  const handleAddSubtask = () => {
+    if (subtaskValue.length) {
+      const newSubtask = {
+        data: {
+          id: uuid(),
+          nome_subtarefa: subtaskValue,
+          anexo_subtarefa: 'https://via.placeholder.com/150',
+          status_subtarefa: false,
+        },
+        handleDelete: handleDeleteSubtask,
+        toggleCheck,
+      }
 
-  //   const handleDeleteSubtask = (id: string) => {
-  //     setSubtasks(subtasks.filter(subtask => subtask.data.id !== id))
-  //   }
+      if (subtasks) {
+        setSubtasks([...subtasks, newSubtask])
+      } else {
+        setSubtasks([newSubtask])
+      }
+      setSubtaskValue('')
+    }
+  }
 
-  //   const toggleCheck = (id: string) => {
-  //     const subtaskToUpdateIndex = subtasks.findIndex(subtask => subtask.data.id === id)
+  const toggleCheck = (id: number) => {
+    if (!subtasks) return
 
-  //     if (subtaskToUpdateIndex === -1) return
+    const subtaskToUpdateIndex = subtasks.findIndex(subtask => subtask.id_subtarefa === id)
 
-  //     const updatedTask = subtasks[subtaskToUpdateIndex]
-  //     updatedTask.data.status_subtarefa = !updatedTask.data.status_subtarefa
+    if (subtaskToUpdateIndex === -1) return
 
-  //     setSubtasks(
-  //       subtasks.map(task => {
-  //         return task.data.id === id ? updatedTask : task
-  //       }),
-  //     )
-  //   }
+    const updatedTask = { ...subtasks[subtaskToUpdateIndex] }
+    updatedTask.status_subtarefa = updatedTask.status_subtarefa === 'A_FAZER' ? 'FEITO' : 'A_FAZER'
+
+    setSubtasks(
+      subtasks.map(task => {
+        return task.id_subtarefa === id ? updatedTask : task
+      }),
+    )
+
+    editSubTask(task.id_subtarefa, updatedTask)
+  }
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -121,7 +140,7 @@ const KanbanEditModal = ({ updateTask, onClose, isOpen, task }: KanbanModalProps
                 onChange={handleChange}
               />
             </FormControl>
-            {/* 
+
             <FormControl>
               <FormLabel fontWeight="bold" fontSize="14px">
                 Subtarefas
@@ -148,18 +167,18 @@ const KanbanEditModal = ({ updateTask, onClose, isOpen, task }: KanbanModalProps
                 </InputGroup>
 
                 {subtasks &&
-                  subtasks.map(task => (
-                    <Stack w="100%" align="center" key={task.data.id}>
-                      <Subtask
-                        key={task.data.id}
-                        data={task.data}
+                  subtasks.map(subtask => (
+                    <Stack w="100%" align="center" key={subtask.id_subtarefa}>
+                      <SubtaskEdit
+                        key={subtask.id_subtarefa}
+                        data={subtask}
                         toggleCheck={toggleCheck}
                         handleDelete={handleDeleteSubtask}
                       />
                     </Stack>
                   ))}
               </Stack>
-            </FormControl> */}
+            </FormControl>
 
             <FormControl mt={6}>
               <FormLabel fontWeight="bold" fontSize="14px">

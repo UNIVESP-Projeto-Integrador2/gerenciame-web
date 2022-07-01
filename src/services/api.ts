@@ -1,8 +1,9 @@
-import { TaskData } from '@/components/Kanban/KanbanModal/KanbanModal'
+import { SubtaskData, TaskData } from '@/components/Kanban/KanbanModal/KanbanModal'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Tarefa } from '../types/tarefa'
 
 const TASKS_PATH = 'tarefas'
+const SUBTASKS_PATH = 'subtarefas'
 
 export type User = {
   id_usuario: number
@@ -82,6 +83,26 @@ export const api = createApi({
         method: 'DELETE',
       }),
     }),
+    createSubTasks: builder.mutation<SubtaskData, {data: SubtaskData}>({
+      query: ({ data }) => ({
+        url: SUBTASKS_PATH,
+        method: 'POST',
+        body: data,
+      }),
+    }),
+    updateSubTask: builder.mutation<Tarefa, { subtarefa_id: number; data: Partial<SubtaskData> }>({
+      query: ({ subtarefa_id, data }) => ({
+        url: `${SUBTASKS_PATH}/${subtarefa_id}`,
+        method: 'PUT',
+        body: data,
+      }),
+    }),
+    deleteSubTask: builder.mutation<void, { subtarefa_id: number }>({
+      query: ({ subtarefa_id }) => ({
+        url: `${SUBTASKS_PATH}/${subtarefa_id}`,
+        method: 'DELETE',
+      }),
+    }),
   }),
 })
 
@@ -92,5 +113,8 @@ export const {
   useGetTaskByIdQuery,
   useUpdateTaskMutation,
   useCreateTaskMutation,
-  useDeleteTaskMutation
+  useDeleteTaskMutation,
+  useCreateSubTasksMutation,
+  useDeleteSubTaskMutation,
+  useUpdateSubTaskMutation
 } = api

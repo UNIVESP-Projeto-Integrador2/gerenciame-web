@@ -1,4 +1,12 @@
-import { useCreateTaskMutation, useGetTasksQuery, useDeleteTaskMutation, useUpdateTaskMutation } from '@/services/api'
+import { 
+  useCreateTaskMutation, 
+  useGetTasksQuery, 
+  useDeleteTaskMutation, 
+  useUpdateTaskMutation, 
+  useCreateSubTasksMutation, 
+  useDeleteSubTaskMutation, 
+  useUpdateSubTaskMutation 
+} from '@/services/api'
 import { Tarefa } from '@/types/tarefa'
 import { useDisclosure } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
@@ -11,7 +19,8 @@ import {
   parseDbTaskToTask,
   Task,
 } from '@/utils/formatTasks'
-import { TaskData } from '../KanbanModal/KanbanModal'
+import { SubtaskData, TaskData } from '../KanbanModal/KanbanModal'
+
 
 export const useKanban = () => {
   const [columns, setColumns] = useState<ColumnProps[]>([])
@@ -23,6 +32,9 @@ export const useKanban = () => {
   const [ createTask ] = useCreateTaskMutation()
   const [ deleteTask ] = useDeleteTaskMutation()
   const [ updateTask ] = useUpdateTaskMutation()
+  const [ createSubTasks ] = useCreateSubTasksMutation()
+  const [ deleteSubTask ] = useDeleteSubTaskMutation()
+  const [ updateSubTask ] = useUpdateSubTaskMutation()
 
   useEffect(() => {
     if (data) {
@@ -82,7 +94,13 @@ export const useKanban = () => {
     setColumns([...newColumnsState])
   }
 
-  const addTask = (task: TaskData) => {
+  const addSubTask = (subtask: SubtaskData) => {
+    createSubTasks( {
+      data: subtask
+    })
+  }
+
+  const addTask = async (task: TaskData) => {
     addTaskOnClose()
 
     const newTask = parseDbTaskToTask(task as Tarefa)
@@ -92,7 +110,7 @@ export const useKanban = () => {
     const updatedColumns = formatWeekTasks(currentWeek, newTasks)
     setColumns(updatedColumns)
  
-    createTask({data: task})
+    return await createTask({data: task})
   }
 
   const removeTask = (taskId: number) => {
@@ -104,7 +122,6 @@ export const useKanban = () => {
     deleteTask({ tarefa_id: taskId })
   }
 
-  // TODO: editar
   const editTask = (taskId: number, updatedTask: Tarefa) => {
     addTaskOnClose()
     const parsedTask = parseDbTaskToTask(updatedTask)
@@ -134,6 +151,14 @@ export const useKanban = () => {
     })
   }
 
+  const editSubTask = (subtaskId: number, updatedTask: Partial<SubtaskData>) => {
+    updateSubTask({subtarefa_id: subtaskId, data: updatedTask})
+  }
+
+  const removeSubTask = (subtaskId: number) => {
+    deleteSubTask({subtarefa_id: subtaskId})
+  }
+
   const handleChangeWeek = (action: 'prev' | 'next') => {
     if (action === 'prev') {
       setCurrentWeek(prev => prev - 1)
@@ -154,5 +179,8 @@ export const useKanban = () => {
     handleChangeWeek,
     isLoading,
     error,
+    addSubTask,
+    editSubTask,
+    removeSubTask
   }
 }

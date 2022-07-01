@@ -16,7 +16,7 @@ const KanbanEditForm = ({ task, editTask }: KanbanEditFormProps) => {
 
   const handleEditTask = (event: FormEvent<HTMLButtonElement>) => {
     event.preventDefault()
-    console.log(data)
+
     editTask(task.id_tarefa, data)
   }
   return (
