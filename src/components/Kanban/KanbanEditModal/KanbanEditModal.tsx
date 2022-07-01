@@ -117,7 +117,7 @@ const KanbanEditModal = ({ updateTask, onClose, isOpen, task }: KanbanModalProps
       }),
     )
 
-    editSubTask(task.id_subtarefa, updatedTask)
+    editSubTask(updatedTask.id_subtarefa, updatedTask)
   }
 
   return (

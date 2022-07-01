@@ -108,6 +108,7 @@ const KanbanModal = ({ addTask, onClose, isOpen, addSubtask }: KanbanModalProps)
         toggleCheck,
       }
 
+      addSubtask(newSubtask.data)
       setSubtasks([...subtasks, newSubtask])
       setSubtaskValue('')
     }
