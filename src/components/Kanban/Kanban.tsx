@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
 import React from 'react'
 import { DragDropContext } from 'react-beautiful-dnd'
 import { KanbanColumn } from './KanbanColumn'
@@ -33,16 +35,19 @@ const Kanban = () => {
       <DragDropContext onDragEnd={e => console.log(e)}>
         <Center>
           <HStack mt="80px">
-            {columns.map(({ id, name, tasks }) => (
-              <KanbanColumn
-                id={id}
-                key={id}
-                name={name}
-                tasks={tasks}
-                removeTask={removeTask}
-                editTask={editTask}
-              />
-            ))}
+            {columns.map(({ id, name, tasks }) => {
+              console.log(tasks)
+              return (
+                <KanbanColumn
+                  id={id}
+                  key={id}
+                  name={name}
+                  tasks={tasks}
+                  removeTask={removeTask}
+                  editTask={editTask}
+                />
+              )
+            })}
           </HStack>
         </Center>
       </DragDropContext>

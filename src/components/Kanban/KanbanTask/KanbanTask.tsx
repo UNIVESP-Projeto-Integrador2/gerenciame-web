@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import React from 'react'
 import { Draggable } from 'react-beautiful-dnd'
 import { useToggle } from '@/hooks/useToggle'
@@ -23,9 +27,11 @@ const KanbanTask = ({ task, editTask, removeTask }: KanbanTaskProps) => {
 
   const { addTaskOnClose } = useKanban()
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const dataInicial = new Date(task.data_inicial.replace(/-/g, '/'))
   const dataFinal = new Date(task.data_limite.replace(/-/g, '/'))
 
+  console.log(task)
   return (
     <Draggable draggableId={`task-${task.id_tarefa}`} index={task.id_tarefa}>
       {provided => (

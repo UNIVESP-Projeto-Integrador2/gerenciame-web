@@ -1,7 +1,9 @@
+// @ts-nocheck
 /* eslint-disable @typescript-eslint/await-thenable */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
 import React, { ChangeEvent, FormEvent, useState } from 'react'
 import { BsPlusCircleFill } from 'react-icons/bs'
 import { format } from 'date-fns'

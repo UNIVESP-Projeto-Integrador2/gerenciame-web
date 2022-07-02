@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
 import { ChangeEvent, useState } from 'react'
 
 export function useInputState<T>(

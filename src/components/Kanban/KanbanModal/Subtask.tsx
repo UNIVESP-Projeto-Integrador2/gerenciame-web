@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import React from 'react'
 import { HStack, Text, Flex, IconButton, Checkbox } from '@chakra-ui/react'
 import { BsFillTrashFill } from 'react-icons/bs'
@@ -6,7 +8,7 @@ export type SubtaskData = {
   id: string
   nome_subtarefa: string
   anexo_subtarefa?: string
-  status_subtarefa: boolean
+  status_subtarefa: string
 }
 
 export type SubtaskProps = {

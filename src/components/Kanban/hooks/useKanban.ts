@@ -43,6 +43,10 @@ export const useKanban = () => {
       setAllTasks(parsedTasks)
       const formattedColumns = formatWeekTasks(currentWeek, parsedTasks)
       setColumns(formattedColumns)
+
+      console.log({data})
+      console.log({parsedTasks})
+      console.log({formattedColumns})
     }
   }, [currentWeek, data])
 

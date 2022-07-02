@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import React from 'react'
 import { HStack, Text, Flex, IconButton, Checkbox } from '@chakra-ui/react'
 import { BsFillTrashFill } from 'react-icons/bs'
